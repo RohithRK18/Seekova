@@ -10,18 +10,22 @@ router = APIRouter(prefix="/api/search", tags=["Search"])
 class SearchRequest(BaseModel):
     query: str
     limit: int = 10
+    mode: str = "deep"
 
 
 @router.post("")
 async def search(request: SearchRequest):
-    results = search_engine.search(
-        request.query,
-        request.limit
+    output = search_engine.search(
+        query=request.query,
+        top_k=request.limit,
+        mode=request.mode
     )
 
     return {
         "success": True,
         "query": request.query,
-        "count": len(results),
-        "results": results
+        "mode": request.mode,
+        "count": len(output["results"]),
+        "answer": output["answer"],
+        "results": output["results"]
     }

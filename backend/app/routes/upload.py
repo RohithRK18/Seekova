@@ -1,5 +1,6 @@
 import os
 import uuid
+import tempfile
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
@@ -12,12 +13,12 @@ router = APIRouter(
     tags=["Upload"]
 )
 
-UPLOAD_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads")
-
-os.makedirs(
-    UPLOAD_DIRECTORY,
-    exist_ok=True
-)
+# Use /tmp on Vercel or read-only environments
+try:
+    UPLOAD_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads")
+    os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
+except Exception:
+    UPLOAD_DIRECTORY = tempfile.gettempdir()
 
 ALLOWED_EXTENSIONS = {
     ".pdf",

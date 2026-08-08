@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, AlertTriangle, RefreshCw } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import SearchBar from "./components/SearchBar";
 import SearchResult from "./components/SearchResult";
 import WelcomeScreen from "./components/WelcomeScreen";
+import AnswerCard from "./components/AnswerCard";
 import "./index.css";
 
-const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000" : "");
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:8000" : "");
 
 function App() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [answer, setAnswer] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [activeMode, setActiveMode] = useState("deep");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -44,6 +48,8 @@ function App() {
     if (!searchQuery.trim()) return;
 
     setLoading(true);
+    setHasSearched(true);
+    setSearchError(null);
     setQuery(searchQuery);
 
     try {
@@ -54,14 +60,21 @@ function App() {
         },
         body: JSON.stringify({
           query: searchQuery,
-          limit: 10
+          limit: 10,
+          mode: activeMode
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       setResults(data.results || []);
+      setAnswer(data.answer || null);
 
-      await fetch(`${API_URL}/api/history`, {
+      // Save to history asynchronously
+      fetch(`${API_URL}/api/history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -69,11 +82,12 @@ function App() {
         body: JSON.stringify({
           query: searchQuery
         })
-      });
-
-      loadHistory();
+      })
+        .then(() => loadHistory())
+        .catch(() => {});
     } catch (error) {
       console.error("Search error:", error);
+      setSearchError(error.message || "Failed to fetch search results from Seekova engine.");
     } finally {
       setLoading(false);
     }
@@ -82,6 +96,9 @@ function App() {
   function newSearch() {
     setQuery("");
     setResults([]);
+    setAnswer(null);
+    setHasSearched(false);
+    setSearchError(null);
     setUploadedFiles([]);
   }
 
@@ -116,7 +133,7 @@ function App() {
             {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <div className="brand">
+          <div className="brand" onClick={newSearch} style={{ cursor: "pointer" }}>
             <div className="brand-logo">S</div>
             <span>Seekova</span>
           </div>
@@ -128,7 +145,7 @@ function App() {
         </header>
 
         <section className="content">
-          {results.length === 0 && !loading ? (
+          {!hasSearched ? (
             <WelcomeScreen
               onSearch={performSearch}
               onTriggerUpload={() => {
@@ -144,33 +161,52 @@ function App() {
                   <h1>Results for "{query}"</h1>
                 </div>
                 <div className="result-count">
-                  {results.length} matched documents
+                  {results.length} matched {results.length === 1 ? "document" : "documents"}
                 </div>
               </div>
 
               {loading ? (
                 <div className="loader">
                   <div className="loader-ring"></div>
-                  <p>Seekova is computing TF-IDF similarity vectors...</p>
+                  <p>Seekova is computing TF-IDF similarity vectors & synthesizing answer...</p>
+                </div>
+              ) : searchError ? (
+                <div className="error-container">
+                  <AlertTriangle size={32} className="error-icon" />
+                  <h3>Search Request Failed</h3>
+                  <p>{searchError}</p>
+                  <button className="retry-btn" onClick={() => performSearch(query)}>
+                    <RefreshCw size={16} />
+                    <span>Try Again</span>
+                  </button>
                 </div>
               ) : (
-                <div className="results">
-                  {results.length === 0 ? (
-                    <div className="no-results">
-                      <h3>No relevant documents found</h3>
-                      <p>
-                        Try uploading documents (PDF, DOCX, TXT, MD) using the + button below or try different search keywords.
-                      </p>
-                    </div>
-                  ) : (
-                    results.map((result) => (
-                      <SearchResult
-                        key={result.id}
-                        result={result}
-                        activeMode={activeMode}
-                      />
-                    ))
+                <div className="results-container">
+                  {/* AI Synthesized Answer Box */}
+                  {answer && (
+                    <AnswerCard query={query} answer={answer} activeMode={activeMode} />
                   )}
+
+                  {/* Document Results List */}
+                  <div className="results">
+                    {results.length === 0 ? (
+                      <div className="no-results">
+                        <h3>No matching documents found</h3>
+                        <p>
+                          Try uploading documents (PDF, DOCX, TXT, MD) using the + button below or try different search keywords.
+                        </p>
+                      </div>
+                    ) : (
+                      results.map((result) => (
+                        <SearchResult
+                          key={result.id}
+                          result={result}
+                          activeMode={activeMode}
+                          query={query}
+                        />
+                      ))
+                    )}
+                  </div>
                 </div>
               )}
             </>
