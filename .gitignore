@@ -1,0 +1,110 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented code leveraged by Istanbul
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test cache
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-modules
+node_modules/
+frontend/node_modules/
+jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev)
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rbuf
+
+# Parcel cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt build output
+.nuxt
+dist
+frontend/dist/
+
+# Gatsby files
+.cache/
+# comment a line, if you want to submit public to your repo
+# public
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# Tern JS completion analyzer
+.tern-port
+
+# Stores VSCode versions available for testing when building extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Python virtual environment & cache
+backend/venv/
+venv/
+ENV/
+env/
+__pycache__/
+backend/app/__pycache__/
+backend/app/routes/__pycache__/
+*.pyc
+*.pyo
+
+# Uploaded documents
+backend/uploads/*
+!backend/uploads/.gitkeep

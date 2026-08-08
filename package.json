@@ -1,0 +1,12 @@
+{
+  "name": "seekova-monorepo",
+  "version": "1.0.0",
+  "scripts": {
+    "dev:backend": "cd backend && venv\\Scripts\\activate && uvicorn app.main:app --reload",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

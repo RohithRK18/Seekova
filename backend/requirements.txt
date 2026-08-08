@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+scikit-learn
+numpy
+pymongo
+python-dotenv
+pypdf
+python-docx
+Pillow
