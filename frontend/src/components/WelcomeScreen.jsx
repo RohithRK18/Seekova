@@ -3,8 +3,8 @@ import { Sparkles, FileSearch, Mic, Zap, UploadCloud } from "lucide-react";
 function WelcomeScreen({ onSearch, onTriggerUpload }) {
   return (
     <div className="welcome">
-      <div className="welcome-orb">
-        <Sparkles size={32} />
+      <div className="welcome-logo-wrapper">
+        <img src="/logo.png" alt="Seekova" className="welcome-logo-img" />
       </div>
 
       <span className="welcome-label">INTELLIGENT KNOWLEDGE RETRIEVAL</span>

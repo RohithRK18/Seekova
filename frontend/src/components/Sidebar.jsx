@@ -24,9 +24,8 @@ function Sidebar({
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="mini-logo">S</div>
-        <span className="sidebar-title">Seekova</span>
+      <div className="sidebar-header" onClick={onNewSearch} style={{ cursor: "pointer" }}>
+        <img src="/logo.png" alt="Seekova" className="sidebar-logo-img" />
       </div>
 
       <button className="new-search" onClick={onNewSearch}>

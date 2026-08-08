@@ -61,23 +61,48 @@ button {
   margin-bottom: 24px;
 }
 
-.mini-logo,
-.brand-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  color: white;
-  background: linear-gradient(135deg, #8b5cf6, #5b7cff);
-  box-shadow: 0 0 25px rgba(123, 92, 246, 0.3);
+.brand-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.3));
+  transition: transform 0.2s ease;
 }
 
-.sidebar-title {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+.brand-logo-img:hover {
+  transform: scale(1.03);
+}
+
+.sidebar-logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 170px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(96, 165, 250, 0.2));
+  transition: transform 0.2s ease;
+}
+
+.sidebar-logo-img:hover {
+  transform: scale(1.02);
+}
+
+.welcome-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.welcome-logo-img {
+  height: 75px;
+  width: auto;
+  max-width: 320px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 20px rgba(96, 165, 250, 0.25));
+  transition: transform 0.2s ease;
+}
+
+.welcome-logo-img:hover {
+  transform: scale(1.02);
 }
 
 .new-search {

@@ -134,8 +134,7 @@ function App() {
           </button>
 
           <div className="brand" onClick={newSearch} style={{ cursor: "pointer" }}>
-            <div className="brand-logo">S</div>
-            <span>Seekova</span>
+            <img src="/logo.png" alt="Seekova" className="brand-logo-img" />
           </div>
 
           <div className="status">
