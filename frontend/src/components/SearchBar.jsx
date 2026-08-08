@@ -29,13 +29,13 @@ function SearchBar({
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Voice recognition is not supported in this browser.");
+      alert("Voice recognition is not supported in this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
       return;
     }
 
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.continuous = false;
 
     recognition.onstart = () => {
@@ -43,13 +43,19 @@ function SearchBar({
     };
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setQuery(transcript);
-      onSearch(transcript);
+      let currentTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        currentTranscript += event.results[i][0].transcript;
+      }
+      setQuery(currentTranscript);
+      if (event.results[0].isFinal) {
+        onSearch(currentTranscript);
+      }
     };
 
     recognition.onerror = (event) => {
       console.error("Voice recognition error:", event.error);
+      setListening(false);
     };
 
     recognition.onend = () => {
