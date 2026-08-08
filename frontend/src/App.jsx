@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
-import { Menu, X, AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertTriangle, RefreshCw, Layers } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import TopNavigation from "./components/TopNavigation";
 import SearchBar from "./components/SearchBar";
 import SearchResult from "./components/SearchResult";
 import WelcomeScreen from "./components/WelcomeScreen";
 import AnswerCard from "./components/AnswerCard";
+import SourceCard from "./components/SourceCard";
+import SearchJourney from "./components/SearchJourney";
+import KnowledgeMap from "./components/KnowledgeMap";
+import ComparisonView from "./components/ComparisonView";
+import RelatedQuestions from "./components/RelatedQuestions";
+import DocumentWorkspace from "./components/DocumentWorkspace";
+import VisionSearch from "./components/VisionSearch";
+import VoiceSearch from "./components/VoiceSearch";
+import CommandPalette from "./components/CommandPalette";
+import { SeekovaOrb } from "./components/SeekovaLogo";
 import "./index.css";
 
 const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:8000" : "");
@@ -19,7 +30,9 @@ function App() {
   const [searchError, setSearchError] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [activeMode, setActiveMode] = useState("deep");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
     loadHistory();
@@ -45,7 +58,7 @@ function App() {
   }
 
   async function performSearch(searchQuery = query) {
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim() && uploadedFiles.length === 0) return;
 
     setLoading(true);
     setHasSearched(true);
@@ -108,8 +121,14 @@ function App() {
     setUploadedFiles([]);
   }
 
+  function triggerFileUpload() {
+    const input = document.querySelector('input[type="file"]');
+    if (input) input.click();
+  }
+
   return (
-    <div className={`app ${mobileSidebarOpen ? "sidebar-open" : ""}`}>
+    <div className={`seekova-app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+      {/* Mobile Drawer Overlay */}
       {mobileSidebarOpen && (
         <div
           className="mobile-overlay"
@@ -117,6 +136,7 @@ function App() {
         />
       )}
 
+      {/* Left Sidebar */}
       <Sidebar
         history={history}
         onNewSearch={newSearch}
@@ -127,96 +147,167 @@ function App() {
         activeMode={activeMode}
         setActiveMode={setActiveMode}
         onClearHistory={clearHistory}
+        collapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+        onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
-      <main className="main">
-        <header className="topbar">
-          <button
-            className="mobile-menu-toggle"
-            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            title="Toggle Menu"
-          >
-            {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+      {/* Main App Layout Area */}
+      <div className="seekova-main-wrapper">
+        <TopNavigation
+          activeMode={activeMode}
+          onNewSearch={newSearch}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          mobileSidebarOpen={mobileSidebarOpen}
+        />
 
-          <div className="brand" onClick={newSearch} style={{ cursor: "pointer" }}>
-            <img src="/logo.png" alt="Seekova" className="brand-logo-img" />
-          </div>
-
-          <div className="status">
-            <span className="status-dot"></span>
-            <span className="status-text">Mode: {activeMode.toUpperCase()}</span>
-          </div>
-        </header>
-
-        <section className="content">
+        <main className="seekova-content-area">
           {!hasSearched ? (
-            <WelcomeScreen
-              onSearch={performSearch}
-              onTriggerUpload={() => {
-                const input = document.querySelector('input[type="file"]');
-                if (input) input.click();
-              }}
-            />
+            /* Home Mode Views */
+            activeMode === "docs" ? (
+              <DocumentWorkspace
+                uploadedFiles={uploadedFiles}
+                onTriggerUpload={triggerFileUpload}
+                onSearch={performSearch}
+              />
+            ) : activeMode === "vision" ? (
+              <VisionSearch onSearch={performSearch} />
+            ) : activeMode === "voice" ? (
+              <VoiceSearch onSearch={performSearch} setQuery={setQuery} />
+            ) : (
+              <WelcomeScreen
+                onSearch={performSearch}
+                onTriggerUpload={triggerFileUpload}
+                setActiveMode={setActiveMode}
+              />
+            )
           ) : (
-            <>
-              <div className="results-header">
-                <div>
-                  <span className="eyebrow">SEEKOVA INTELLIGENT SEARCH</span>
-                  <h1>Results for "{query}"</h1>
-                </div>
-                <div className="result-count">
-                  {results.length} matched {results.length === 1 ? "document" : "documents"}
-                </div>
-              </div>
-
-              {loading ? (
-                <div className="loader">
-                  <div className="loader-ring"></div>
-                  <p>Seekova is computing TF-IDF similarity vectors & synthesizing answer...</p>
-                </div>
-              ) : searchError ? (
-                <div className="error-container">
-                  <AlertTriangle size={32} className="error-icon" />
-                  <h3>Search Request Failed</h3>
-                  <p>{searchError}</p>
-                  <button className="retry-btn" onClick={() => performSearch(query)}>
-                    <RefreshCw size={16} />
-                    <span>Try Again</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="results-container">
-                  {/* AI Synthesized Answer Box */}
-                  {answer && (
-                    <AnswerCard query={query} answer={answer} activeMode={activeMode} />
-                  )}
-
-                  {/* Document Results List */}
-                  <div className="results">
-                    {results.length === 0 ? (
-                      <div className="no-results">
-                        <h3>No matching documents found</h3>
-                        <p>
-                          Try uploading documents (PDF, DOCX, TXT, MD) using the + button below or try different search keywords.
-                        </p>
-                      </div>
-                    ) : (
-                      results.map((result) => (
-                        <SearchResult
-                          key={result.id}
-                          result={result}
-                          activeMode={activeMode}
-                          query={query}
-                        />
-                      ))
-                    )}
+            /* Search Results Dashboard - 3 Column Layout */
+            <div className="seekova-results-layout">
+              {/* Center Main Column: Answer & In-depth Analysis */}
+              <div className="center-results-column">
+                <div className="results-header-bar">
+                  <div className="header-title-group">
+                    <span className="eyebrow-tag">SEEKOVA INTELLIGENT SEARCH</span>
+                    <h1 className="query-heading">Results for "{query}"</h1>
+                  </div>
+                  <div className="result-stats">
+                    {results.length} grounded document matches
                   </div>
                 </div>
-              )}
-            </>
+
+                {loading ? (
+                  <div className="seekova-loader-box">
+                    <SeekovaOrb state="searching" size={64} />
+                    <p className="loader-text">
+                      Seekova is computing TF-IDF similarity vectors & synthesizing answer...
+                    </p>
+                  </div>
+                ) : searchError ? (
+                  <div className="seekova-error-card">
+                    <AlertTriangle size={32} className="error-icon" />
+                    <h3>Search Engine Request Failed</h3>
+                    <p>{searchError}</p>
+                    <button
+                      className="retry-btn"
+                      onClick={() => performSearch(query)}
+                    >
+                      <RefreshCw size={16} />
+                      <span>Retry Search</span>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {/* AI Answer Synthesis Card */}
+                    {answer && (
+                      <AnswerCard
+                        query={query}
+                        answer={answer}
+                        activeMode={activeMode}
+                        topDoc={results[0]}
+                      />
+                    )}
+
+                    {/* Comparison Matrix (if vs query) */}
+                    <ComparisonView query={query} />
+
+                    {/* Interactive Knowledge Map */}
+                    <KnowledgeMap
+                      query={query}
+                      results={results}
+                      onSelectNode={performSearch}
+                    />
+
+                    {/* Search Journey Timeline */}
+                    <SearchJourney
+                      query={query}
+                      onSelectSearch={performSearch}
+                    />
+
+                    {/* Document Results List */}
+                    <div className="document-results-list">
+                      <div className="list-title">
+                        <Layers size={16} />
+                        <span>INDEXED GROUNDED DOCUMENTS ({results.length})</span>
+                      </div>
+
+                      {results.length === 0 ? (
+                        <div className="no-results-card">
+                          <h3>No matching documents found in index</h3>
+                          <p>
+                            Try uploading documents (PDF, DOCX, TXT, MD) using the + button on the search bar or try different keywords.
+                          </p>
+                        </div>
+                      ) : (
+                        results.map((result) => (
+                          <SearchResult
+                            key={result.id}
+                            result={result}
+                            activeMode={activeMode}
+                            query={query}
+                          />
+                        ))
+                      )}
+                    </div>
+
+                    {/* Related Questions Bottom Section */}
+                    <RelatedQuestions
+                      query={query}
+                      onSelectSearch={performSearch}
+                    />
+                  </>
+                )}
+              </div>
+
+              {/* Right Panel: Grounded Source Cards */}
+              <div className="right-sources-column">
+                <div className="sources-column-header">
+                  <h3>GROUNDED SOURCES ({results.length})</h3>
+                </div>
+
+                <div className="sources-cards-scroll">
+                  {results.length === 0 ? (
+                    <div className="empty-sources-notice">
+                      <span>No direct source documents match query.</span>
+                    </div>
+                  ) : (
+                    results.map((res, index) => (
+                      <SourceCard
+                        key={res.id}
+                        result={res}
+                        activeMode={activeMode}
+                        query={query}
+                        citationNumber={index + 1}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
           )}
 
+          {/* Sticky Bottom Search Command Center */}
           <SearchBar
             query={query}
             setQuery={setQuery}
@@ -224,9 +315,27 @@ function App() {
             uploadedFiles={uploadedFiles}
             setUploadedFiles={setUploadedFiles}
             activeMode={activeMode}
+            setActiveMode={setActiveMode}
           />
-        </section>
-      </main>
+        </main>
+      </div>
+
+      {/* Command Palette Modal (Ctrl + K) */}
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onNewSearch={newSearch}
+        onSelectMode={(m) => {
+          setActiveMode(m);
+          setCommandPaletteOpen(false);
+        }}
+        onSelectSearch={(q) => {
+          performSearch(q);
+          setCommandPaletteOpen(false);
+        }}
+        history={history}
+        onTriggerUpload={triggerFileUpload}
+      />
     </div>
   );
 }
