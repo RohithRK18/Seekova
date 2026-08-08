@@ -61,7 +61,13 @@ function App() {
         body: JSON.stringify({
           query: searchQuery,
           limit: 10,
-          mode: activeMode
+          mode: activeMode,
+          custom_documents: uploadedFiles.map((file) => ({
+            id: file.id,
+            title: file.name,
+            content: file.content || file.name,
+            file_type: file.type || ".txt"
+          }))
         })
       });
 

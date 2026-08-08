@@ -12,18 +12,24 @@ function SearchResult({ result, activeMode, query }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  // Highlight query keywords in text
+  const STOP_TERMS = new Set([
+    "what", "where", "who", "when", "how", "is", "are", "the", "a", "an", "in", "on",
+    "of", "to", "for", "and", "or", "me", "tell", "explain", "about", "this", "that", "with"
+  ]);
+
+  // Highlight query keywords in text strictly on word boundaries
   function renderHighlighted(text) {
     if (!query || !query.trim()) return text;
     const terms = query
       .trim()
       .split(/\s+/)
-      .filter((t) => t.length > 1)
+      .map((t) => t.toLowerCase().replace(/[^a-z0-9]/g, ""))
+      .filter((t) => t.length > 1 && !STOP_TERMS.has(t))
       .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 
     if (terms.length === 0) return text;
 
-    const regex = new RegExp(`(${terms.join("|")})`, "gi");
+    const regex = new RegExp(`\\b(${terms.join("|")})\\b`, "gi");
     const parts = text.split(regex);
 
     return parts.map((part, i) =>

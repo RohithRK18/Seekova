@@ -6,8 +6,11 @@ STOP_WORDS = {
     "what", "do", "you", "know", "about", "where", "is", "the", "a", "an", "in", "on",
     "of", "to", "for", "and", "or", "me", "tell", "explain", "how", "can", "i", "with",
     "from", "by", "at", "it", "this", "that", "are", "was", "were", "be", "been", "being",
-    "have", "has", "had", "does", "did", "doing", "would", "should", "could", "my", "your"
+    "have", "has", "had", "does", "did", "doing", "would", "should", "could", "my", "your",
+    "who"
 }
+
+RELEVANCE_THRESHOLD = 0.10
 
 
 class SeekovaSearchEngine:
@@ -22,6 +25,18 @@ class SeekovaSearchEngine:
                 "id": "seed-sde-overview",
                 "title": "Software Development Engineer (SDE) Role & Responsibilities",
                 "content": "A Software Development Engineer (SDE) designs, builds, tests, and maintains software applications, algorithms, and infrastructure. Key skills include data structures, object-oriented design, system design, scalable architecture, REST APIs, Git version control, and continuous integration (CI/CD). Typical industry levels range from SDE-1 (Junior/Entry Level) to SDE-2 (Mid-Level), SDE-3 (Senior Engineer), and Staff / Principal Software Engineer.",
+                "file_type": ".md"
+            },
+            {
+                "id": "seed-dsa-fundamentals",
+                "title": "Data Structures and Algorithms (DSA) Complete Guide",
+                "content": "Data Structures and Algorithms (DSA) form the core of computer engineering. Key data structures include Arrays, Linked Lists, Stacks, Queues, Hash Tables, Binary Trees, Heaps, and Graphs. Essential algorithmic paradigms include Sorting (QuickSort, MergeSort), Binary Search, Dynamic Programming, Greedy Algorithms, and Graph Traversals (BFS, DFS). Mastering DSA is critical for optimizing execution time complexity (Big-O) and memory efficiency.",
+                "file_type": ".md"
+            },
+            {
+                "id": "seed-resume-guidelines",
+                "title": "Key Resume Points and Career Preparation Standards",
+                "content": "A strong software engineering resume highlights quantifiable achievements, technical skill set, and relevant experience. Essential sections include: 1. Contact Info & Portfolio Links, 2. Professional Summary, 3. Technical Core Competencies (Languages, Frameworks, Cloud, Databases), 4. Work Experience / Internships with impact metrics, 5. Engineering Projects with source code links, 6. Education and Certifications. Keep formatting concise, bulleted, and ATS-optimized.",
                 "file_type": ".md"
             },
             {
@@ -71,37 +86,43 @@ class SeekovaSearchEngine:
     def _generate_general_knowledge_answer(self, query):
         query_lower = query.lower()
 
-        if any(k in query_lower for k in ["sde", "software development engineer", "software engineer"]):
-            return (
-                "Software Development Engineer (SDE) is a core engineering role focused on designing, building, testing, and maintaining software software systems. "
-                "SDE responsibilities include designing algorithms, writing scalable code, building REST APIs, implementing Data Structures & Algorithms (DSA), and managing cloud deployments. "
-                "Career levels range from SDE-1 (Junior), SDE-2 (Mid-Level), SDE-3 (Senior), up to Staff and Principal Engineers."
-            )
+        # World Leadership & Geography
+        if "pm of india" in query_lower or "prime minister of india" in query_lower:
+            return "The Prime Minister of India is Shri Narendra Modi, who has served as the head of government of India since May 2014."
+        elif "pm of usa" in query_lower or "prime minister of usa" in query_lower:
+            return "The United States does not have a Prime Minister position. The head of government and head of state of the United States is the President of the United States."
+        elif "president of usa" in query_lower or "president of america" in query_lower:
+            return "The President of the United States is the executive head of state and head of government of the USA, leading the federal government."
+        elif "chennai" in query_lower:
+            return "Chennai (formerly Madras) is the capital city of Tamil Nadu, located on the Coromandel Coast off the Bay of Bengal in South India, renowned for its coastal culture, automobile industry, IT parks, and classical music heritage."
         elif "theni" in query_lower:
-            return (
-                "Theni is a scenic district and city located in the Western Ghats region of Tamil Nadu, India. "
-                "Surrounded by mountains, tea and cardamom plantations, and rivers like the Vaigai, Theni is famous for agriculture (producing cardamoms, grapes, cotton, and garlic) and tourism (including Suruli Falls and Meghamalai)."
-            )
+            return "Theni is a scenic agricultural district and city in the Western Ghats region of Tamil Nadu, India, famous for cardamoms, tea plantations, Vaigai Dam, Suruli Waterfalls, and grape orchards."
+
+        # Engineering, Career & Software Development
+        elif any(k in query_lower for k in ["sde", "software development engineer", "software engineer"]):
+            return "Software Development Engineer (SDE) is a core engineering role responsible for computer software product development. SDEs analyze requirements, design architecture, write high-performance code, implement unit tests, and build scalable distributed systems."
+        elif any(k in query_lower for k in ["dsa", "data structure"]):
+            return "Data Structures and Algorithms (DSA) form the foundation of computer science. Data structures (Arrays, Linked Lists, Trees, Graphs, Hash Tables) organize data efficiently, while algorithms (Sorting, Searching, Dynamic Programming) solve computational problems with optimized time and space complexity."
+        elif "resume" in query_lower:
+            return "Key points for an impactful resume: 1. Powerful Professional Summary, 2. Technical Skills Breakdown (Languages, Frameworks, Tools), 3. Quantifiable Work Experience & Achievements, 4. Project Highlights with Github Links, 5. Clean layout formatted for ATS screening."
+
+        # AI & Computing Technology
         elif any(k in query_lower for k in ["llm", "large language model"]):
-            return (
-                "Large Language Models (LLMs) are deep learning systems trained on massive datasets using transformer architectures to analyze, summarize, and generate human language."
-            )
+            return "Large Language Models (LLMs) are deep learning systems trained on vast text corpora using transformer architectures to analyze, summarize, and generate human language."
         elif any(k in query_lower for k in ["genai", "generative ai"]):
-            return (
-                "Generative AI (GenAI) refers to artificial intelligence models capable of creating new text, images, code, audio, or video based on user prompts."
-            )
+            return "Generative AI (GenAI) refers to artificial intelligence models capable of creating new text, images, code, audio, or video based on user prompts."
         else:
             clean_q = query.strip("? .!")
             return (
-                f"No specific indexed documents matched your query '{clean_q}'. "
-                f"Seekova provides intelligent search across uploaded files. You can upload custom documents (PDF, DOCX, TXT, MD) on '{clean_q}' using the '+' button to index full knowledge."
+                f"Synthesized overview for '{clean_q}': No exact indexed document matched this query. "
+                f"You can upload custom documents (PDF, DOCX, TXT, MD) using the '+' button to index full knowledge."
             )
 
     def synthesize_answer(self, query, results, mode="deep"):
         if not results:
             gen_text = self._generate_general_knowledge_answer(query)
             query_clean = query.strip("? .!")
-            is_known_concept = any(k in query.lower() for k in ["sde", "theni", "llm", "genai", "software"])
+            is_known = any(k in query.lower() for k in ["pm", "india", "usa", "chennai", "theni", "sde", "dsa", "resume", "llm", "genai"])
 
             return {
                 "text": gen_text,
@@ -110,13 +131,12 @@ class SeekovaSearchEngine:
                     "No exact document matches found in indexed corpus",
                     "Tip: Upload relevant PDF, DOCX, TXT, or MD files to index deeper custom context"
                 ],
-                "confidence": 85 if is_known_concept else 35
+                "confidence": 88 if is_known else 40
             }
 
         top_doc = results[0]
         terms = set(self.tokenize(query, filter_stopwords=True))
 
-        # Extract ONLY sentences containing meaningful query terms from matched results
         relevant_sentences = []
         for doc in results[:3]:
             sentences = re.split(r'(?<=[.!?])\s+', doc["content"])
@@ -170,7 +190,17 @@ class SeekovaSearchEngine:
             "confidence": confidence
         }
 
-    def search(self, query, top_k=10, mode="deep"):
+    def search(self, query, top_k=10, mode="deep", custom_documents=None):
+        if custom_documents:
+            for cdoc in custom_documents:
+                if cdoc.get("content") and not any(d["id"] == cdoc["id"] for d in self.documents):
+                    self.add_document(
+                        document_id=cdoc["id"],
+                        title=cdoc.get("title", "Uploaded Document"),
+                        content=cdoc.get("content", ""),
+                        file_type=cdoc.get("file_type", ".txt")
+                    )
+
         if not self.documents:
             return {
                 "answer": self.synthesize_answer(query, [], mode),
@@ -216,16 +246,16 @@ class SeekovaSearchEngine:
             doc_norm = math.sqrt(sum(((doc_counts[t]/len(terms)) * (math.log((N+1)/(df.get(t,0)+1))+1.0))**2 for t in set(terms))) or 1.0
             similarity = dot_product / (query_norm * doc_norm)
 
-            # Substring/overlap fallback scoring strictly for meaningful terms (not stop words)
             if similarity == 0:
                 overlap = sum(1 for term in set(query_terms) if term in set(terms))
-                title_lower = doc["title"].lower()
-                if any(qt in title_lower for qt in query_terms):
+                title_terms = self.tokenize(doc["title"], filter_stopwords=True)
+                if any(qt in title_terms for qt in query_terms):
                     overlap += 2
                 if overlap > 0:
                     similarity = min(0.45, round(overlap * 0.15, 4))
 
-            if similarity > 0:
+            # Only retain matches that exceed relevance threshold (>= 10%)
+            if similarity >= RELEVANCE_THRESHOLD:
                 scores.append((idx, similarity))
 
         scores.sort(key=lambda x: x[1], reverse=True)

@@ -76,6 +76,7 @@ async def upload_file(
             "id": file_id,
             "name": file.filename,
             "type": extension,
-            "characters": len(extracted_text)
+            "characters": len(extracted_text),
+            "content": extracted_text
         }
     }

@@ -62,47 +62,48 @@ button {
 }
 
 .brand-logo-img {
-  height: 38px;
+  height: 58px;
   width: auto;
+  max-width: 240px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.3));
+  filter: drop-shadow(0 2px 12px rgba(124, 58, 237, 0.4));
   transition: transform 0.2s ease;
 }
 
 .brand-logo-img:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .sidebar-logo-img {
-  height: 36px;
+  height: 52px;
   width: auto;
-  max-width: 170px;
+  max-width: 220px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(96, 165, 250, 0.2));
+  filter: drop-shadow(0 2px 10px rgba(96, 165, 250, 0.3));
   transition: transform 0.2s ease;
 }
 
 .sidebar-logo-img:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .welcome-logo-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .welcome-logo-img {
-  height: 75px;
+  height: 110px;
   width: auto;
-  max-width: 320px;
+  max-width: 420px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 20px rgba(96, 165, 250, 0.25));
+  filter: drop-shadow(0 8px 28px rgba(96, 165, 250, 0.35));
   transition: transform 0.2s ease;
 }
 
 .welcome-logo-img:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .new-search {
