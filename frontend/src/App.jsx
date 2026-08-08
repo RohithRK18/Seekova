@@ -6,7 +6,7 @@ import SearchResult from "./components/SearchResult";
 import WelcomeScreen from "./components/WelcomeScreen";
 import "./index.css";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000" : "");
 
 function App() {
   const [query, setQuery] = useState("");
@@ -16,7 +16,6 @@ function App() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [activeMode, setActiveMode] = useState("deep");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
 
   useEffect(() => {
     loadHistory();

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000" : "");
 
 function SearchBar({
   query,
