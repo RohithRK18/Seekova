@@ -25,7 +25,7 @@ function AnswerCard({ query, answer, activeMode, topDoc }) {
             <Sparkles size={16} />
           </div>
           <div>
-            <h2 className="answer-heading">Seekova Synthesized Answer</h2>
+            <h2 className="answer-heading">SecondlyBrain Synthesized Answer</h2>
             <span className="answer-subtext">Direct answer computed from corpus TF-IDF alignment</span>
           </div>
         </div>

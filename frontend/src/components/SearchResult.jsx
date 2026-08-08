@@ -68,7 +68,7 @@ function SearchResult({ result, activeMode, query }) {
             onClick={() => setShowInsight(!showInsight)}
           >
             <Sparkles size={14} />
-            {showInsight ? "Hide Insight" : "Seekova Insight"}
+            {showInsight ? "Hide Insight" : "SecondlyBrain Insight"}
           </button>
 
           <button className="copy-snippet-btn" onClick={copySnippet} title="Copy Snippet">
@@ -81,7 +81,7 @@ function SearchResult({ result, activeMode, query }) {
           <div className="insight-panel">
             <div className="insight-header">
               <Sparkles size={16} className="insight-sparkle" />
-              <span>SEEKOVA INSIGHT</span>
+              <span>SECONDLYBRAIN INSIGHT</span>
             </div>
             <p>
               This document <strong>"{result.title}"</strong> achieved a{" "}

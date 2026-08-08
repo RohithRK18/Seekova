@@ -21,7 +21,7 @@ function VisionSearch({ onSearch }) {
     <div className="vision-search-card">
       <div className="vision-header">
         <Eye size={18} className="vision-icon" />
-        <span>SEEKOVA VISION SEARCH & IMAGE ANALYSIS</span>
+        <span>SECONDLYBRAIN VISION SEARCH & IMAGE ANALYSIS</span>
       </div>
 
       {!selectedImage ? (

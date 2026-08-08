@@ -1,6 +1,6 @@
 import React from "react";
 import { Command, Sliders, Moon, User, Sparkles } from "lucide-react";
-import SeekovaLogo from "./SeekovaLogo";
+import SecondlyBrainLogo from "./SecondlyBrainLogo";
 
 function TopNavigation({
   activeMode,
@@ -10,10 +10,10 @@ function TopNavigation({
   mobileSidebarOpen
 }) {
   return (
-    <header className="seekova-topbar">
+    <header className="secondlybrain-topbar">
       <div className="topbar-left">
         <div className="mobile-brand" onClick={onNewSearch}>
-          <SeekovaLogo variant="full" size="small" />
+          <SecondlyBrainLogo variant="full" size="small" />
         </div>
 
         <div className="workspace-badge">

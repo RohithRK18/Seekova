@@ -215,9 +215,9 @@ class SeekovaSearchEngine:
             clean_q = query.strip("? .!")
             return (
                 f"Detailed Knowledge Synthesis for '{clean_q}': "
-                f"While no exact uploaded custom document in your index matched '{clean_q}' directly, Seekova's intelligent search engine provides automated general synthesis. "
-                f"To expand Seekova's index for this specific topic, you can click the '+' button on the search bar to upload custom PDF, DOCX, TXT, or MD documents. "
-                f"Once uploaded, Seekova will immediately parse, tokenize, and index the text using TF-IDF vector ranking, enabling 100% precise grounded search results and instantaneous semantic summaries across your knowledge base."
+                f"While no exact uploaded custom document in your index matched '{clean_q}' directly, SecondlyBrain's intelligent search engine provides automated general synthesis. "
+                f"To expand SecondlyBrain's index for this specific topic, you can click the '+' button on the search bar to upload custom PDF, DOCX, TXT, or MD documents. "
+                f"Once uploaded, SecondlyBrain will immediately parse, tokenize, and index the text using TF-IDF vector ranking, enabling 100% precise grounded search results and instantaneous semantic summaries across your knowledge base."
             )
 
     def synthesize_answer(self, query, results, mode="deep"):
@@ -285,7 +285,7 @@ class SeekovaSearchEngine:
             ]
             confidence = min(99, int(top_doc["score"] * 100) + 25)
         else:  # deep mode (default)
-            answer_text = f"According to Seekova's indexed document '{top_doc['title']}': {main_excerpt}"
+            answer_text = f"According to SecondlyBrain's indexed document '{top_doc['title']}': {main_excerpt}"
             takeaways = [
                 f"Top relevance result: '{top_doc['title']}' with {int(top_doc['score'] * 100)}% relevance",
                 f"Key point: {relevant_sentences[0] if len(relevant_sentences) > 0 else top_doc['title']}",

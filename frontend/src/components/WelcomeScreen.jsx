@@ -10,7 +10,7 @@ import {
   UploadCloud,
   ArrowRight
 } from "lucide-react";
-import SeekovaLogo, { SeekovaOrb } from "./SeekovaLogo";
+import SecondlyBrainLogo, { SecondlyBrainOrb } from "./SecondlyBrainLogo";
 
 function WelcomeScreen({ onSearch, onTriggerUpload, setActiveMode }) {
   const quickPrompts = [
@@ -37,23 +37,23 @@ function WelcomeScreen({ onSearch, onTriggerUpload, setActiveMode }) {
   ];
 
   return (
-    <div className="seekova-welcome-hero">
+    <div className="secondlybrain-welcome-hero">
       <div className="welcome-orb-backdrop">
-        <SeekovaOrb state="idle" size={140} />
+        <SecondlyBrainOrb state="idle" size={150} />
       </div>
 
       <div className="hero-eyebrow">
         <span className="dot" />
-        <span>INTELLIGENT KNOWLEDGE RETRIEVAL</span>
+        <span>YOUR INTELLIGENT SECOND BRAIN</span>
       </div>
 
       <h1 className="hero-title">
-        SEARCH BEYOND <br />
-        <span className="hero-gradient-text">KEYWORDS.</span>
+        WHAT'S ON <br />
+        <span className="hero-gradient-text">YOUR MIND?</span>
       </h1>
 
       <p className="hero-subtitle">
-        Search, understand, and connect information with Seekova — powered by TF-IDF n-gram vector alignment, document ingestion, and voice recognition.
+        Ask anything, search everything, remember forever with SecondlyBrain — powered by TF-IDF n-gram vector alignment, document ingestion, and voice recognition.
       </p>
 
       <div className="hero-prompt-grid">

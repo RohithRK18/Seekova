@@ -144,7 +144,7 @@ function CommandPalette({
 
         <div className="palette-footer">
           <span>Use <strong>Esc</strong> to exit</span>
-          <span>Seekova Command Palette</span>
+          <span>SecondlyBrain Command Palette</span>
         </div>
       </div>
     </div>

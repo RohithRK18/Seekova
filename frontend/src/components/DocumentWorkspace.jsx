@@ -17,7 +17,7 @@ function DocumentWorkspace({ uploadedFiles, onTriggerUpload, onSearch }) {
         <UploadCloud size={40} className="empty-upload-icon" />
         <h3>Document Intelligence Workspace</h3>
         <p>
-          Upload PDF, DOCX, TXT, or MD documents to ingest custom knowledge into Seekova's TF-IDF vector ranking engine.
+          Upload PDF, DOCX, TXT, or MD documents to ingest custom knowledge into SecondlyBrain's TF-IDF vector ranking engine.
         </p>
         <button className="workspace-upload-btn" onClick={onTriggerUpload}>
           <UploadCloud size={16} />

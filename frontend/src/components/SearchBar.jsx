@@ -16,7 +16,7 @@ import {
   Send,
   CornerDownLeft
 } from "lucide-react";
-import { SeekovaOrb } from "./SeekovaLogo";
+import { SecondlyBrainOrb } from "./SecondlyBrainLogo";
 
 const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000" : "");
 
@@ -137,7 +137,7 @@ function SearchBar({
   }
 
   return (
-    <div className="seekova-search-command-center">
+    <div className="secondlybrain-search-command-center">
       {/* Mode Selector Pills */}
       <div className="mode-selector-pills">
         {modes.map((mode) => {
@@ -249,7 +249,7 @@ function SearchBar({
         <textarea
           ref={textareaRef}
           className="command-textarea"
-          placeholder={`Ask Seekova anything... [Mode: ${activeMode.toUpperCase()}]`}
+          placeholder="Ask SecondlyBrain anything..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -288,7 +288,7 @@ function SearchBar({
           <strong>Shift + Enter</strong> for line break
         </span>
         <span className="hint-item">
-          <SeekovaOrb size={14} state={listening ? "listening" : "idle"} /> TF-IDF Semantic Ingestion Active
+          <SecondlyBrainOrb size={14} state={listening ? "listening" : "idle"} /> TF-IDF Semantic Ingestion Active
         </span>
       </div>
     </div>

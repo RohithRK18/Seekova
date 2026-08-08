@@ -15,7 +15,7 @@ import DocumentWorkspace from "./components/DocumentWorkspace";
 import VisionSearch from "./components/VisionSearch";
 import VoiceSearch from "./components/VoiceSearch";
 import CommandPalette from "./components/CommandPalette";
-import { SeekovaOrb } from "./components/SeekovaLogo";
+import { SecondlyBrainOrb } from "./components/SecondlyBrainLogo";
 import "./index.css";
 
 const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:8000" : "");
@@ -106,7 +106,7 @@ function App() {
         .catch(() => {});
     } catch (error) {
       console.error("Search error:", error);
-      setSearchError(error.message || "Failed to fetch search results from Seekova engine.");
+      setSearchError(error.message || "Failed to fetch search results from SecondlyBrain engine.");
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ function App() {
   }
 
   return (
-    <div className={`seekova-app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+    <div className={`secondlybrain-app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       {/* Mobile Drawer Overlay */}
       {mobileSidebarOpen && (
         <div
@@ -153,7 +153,7 @@ function App() {
       />
 
       {/* Main App Layout Area */}
-      <div className="seekova-main-wrapper">
+      <div className="secondlybrain-main-wrapper">
         <TopNavigation
           activeMode={activeMode}
           onNewSearch={newSearch}
@@ -162,7 +162,7 @@ function App() {
           mobileSidebarOpen={mobileSidebarOpen}
         />
 
-        <main className="seekova-content-area">
+        <main className="secondlybrain-content-area">
           {!hasSearched ? (
             /* Home Mode Views */
             activeMode === "docs" ? (
@@ -184,12 +184,12 @@ function App() {
             )
           ) : (
             /* Search Results Dashboard - 3 Column Layout */
-            <div className="seekova-results-layout">
+            <div className="secondlybrain-results-layout">
               {/* Center Main Column: Answer & In-depth Analysis */}
               <div className="center-results-column">
                 <div className="results-header-bar">
                   <div className="header-title-group">
-                    <span className="eyebrow-tag">SEEKOVA INTELLIGENT SEARCH</span>
+                    <span className="eyebrow-tag">SECONDLYBRAIN INTELLIGENT SEARCH</span>
                     <h1 className="query-heading">Results for "{query}"</h1>
                   </div>
                   <div className="result-stats">
@@ -198,14 +198,14 @@ function App() {
                 </div>
 
                 {loading ? (
-                  <div className="seekova-loader-box">
-                    <SeekovaOrb state="searching" size={64} />
+                  <div className="secondlybrain-loader-box">
+                    <SecondlyBrainOrb state="searching" size={64} />
                     <p className="loader-text">
-                      Seekova is computing TF-IDF similarity vectors & synthesizing answer...
+                      SecondlyBrain is computing TF-IDF similarity vectors & synthesizing answer...
                     </p>
                   </div>
                 ) : searchError ? (
-                  <div className="seekova-error-card">
+                  <div className="secondlybrain-error-card">
                     <AlertTriangle size={32} className="error-icon" />
                     <h3>Search Engine Request Failed</h3>
                     <p>{searchError}</p>

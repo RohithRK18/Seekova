@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Mic, Volume2, Search, X, Check, Radio } from "lucide-react";
-import { SeekovaOrb } from "./SeekovaLogo";
+import { SecondlyBrainOrb } from "./SecondlyBrainLogo";
 
 function VoiceSearch({ onSearch, setQuery }) {
   const [listening, setListening] = useState(false);
@@ -39,7 +39,7 @@ function VoiceSearch({ onSearch, setQuery }) {
   return (
     <div className="voice-search-card">
       <div className="voice-orb-wrapper">
-        <SeekovaOrb state={listening ? "listening" : "idle"} size={110} />
+        <SecondlyBrainOrb state={listening ? "listening" : "idle"} size={110} />
       </div>
 
       <h3 className="voice-title">

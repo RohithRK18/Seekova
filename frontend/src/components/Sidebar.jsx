@@ -18,7 +18,7 @@ import {
   PanelLeftClose,
   PanelLeft
 } from "lucide-react";
-import SeekovaLogo from "./SeekovaLogo";
+import SecondlyBrainLogo from "./SecondlyBrainLogo";
 
 function Sidebar({
   history,
@@ -43,14 +43,14 @@ function Sidebar({
   ];
 
   return (
-    <aside className={`seekova-sidebar ${collapsed ? "collapsed" : ""}`}>
+    <aside className={`secondlybrain-sidebar ${collapsed ? "collapsed" : ""}`}>
       {/* Sidebar Header */}
       <div className="sidebar-top">
         <div className="sidebar-brand" onClick={onNewSearch}>
           {collapsed ? (
-            <SeekovaLogo variant="compact" size="medium" />
+            <SecondlyBrainLogo variant="compact" size="medium" />
           ) : (
-            <SeekovaLogo variant="full" size="medium" />
+            <SecondlyBrainLogo variant="full" size="medium" />
           )}
         </div>
         <button
