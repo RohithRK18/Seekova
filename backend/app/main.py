@@ -28,10 +28,10 @@ app.include_router(upload_router)
 app.include_router(history_router)
 
 
-@app.get("/")
-async def root():
+@app.get("/api")
+async def api_root():
     return {
-        "name": "Seekova",
+        "name": "Seekova Search API",
         "status": "online",
         "message": "Seekova Search API is running"
     }
