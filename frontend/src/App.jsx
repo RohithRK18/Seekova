@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import SearchBar from "./components/SearchBar";
 import SearchResult from "./components/SearchResult";
@@ -14,6 +15,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [activeMode, setActiveMode] = useState("deep");
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
 
   useEffect(() => {
     loadHistory();
@@ -84,11 +87,21 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className={`app ${mobileSidebarOpen ? "sidebar-open" : ""}`}>
+      {mobileSidebarOpen && (
+        <div
+          className="mobile-overlay"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       <Sidebar
         history={history}
         onNewSearch={newSearch}
-        onSelectSearch={performSearch}
+        onSelectSearch={(q) => {
+          performSearch(q);
+          setMobileSidebarOpen(false);
+        }}
         activeMode={activeMode}
         setActiveMode={setActiveMode}
         onClearHistory={clearHistory}
@@ -96,6 +109,14 @@ function App() {
 
       <main className="main">
         <header className="topbar">
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            title="Toggle Menu"
+          >
+            {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
           <div className="brand">
             <div className="brand-logo">S</div>
             <span>Seekova</span>
@@ -103,7 +124,7 @@ function App() {
 
           <div className="status">
             <span className="status-dot"></span>
-            <span>Search Intelligence Mode: {activeMode.toUpperCase()}</span>
+            <span className="status-text">Mode: {activeMode.toUpperCase()}</span>
           </div>
         </header>
 
