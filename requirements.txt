@@ -1,10 +1,6 @@
-fastapi
-uvicorn
+# Lightweight requirements for Vercel Serverless Function limits (<250MB)
+fastapi>=0.100.0
+uvicorn>=0.22.0
 python-multipart
-scikit-learn
-numpy
-pymongo
-python-dotenv
 pypdf
 python-docx
-Pillow

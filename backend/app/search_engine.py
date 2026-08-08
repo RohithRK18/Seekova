@@ -1,21 +1,12 @@
-# pyright: reportMissingImports=false
-# pyrefly: ignore [missing-import]
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import math
+import re
+from collections import Counter
 
 
 class SeekovaSearchEngine:
 
     def __init__(self):
         self.documents = []
-        self.vectorizer = TfidfVectorizer(
-            stop_words="english",
-            lowercase=True,
-            ngram_range=(1, 2),
-            max_features=10000
-        )
-        self.document_vectors = None
         self._seed_default_knowledge()
 
     def _seed_default_knowledge(self):
@@ -47,7 +38,6 @@ class SeekovaSearchEngine:
         ]
         for doc in default_docs:
             self.documents.append(doc)
-        self._rebuild_index()
 
     def add_document(self, document_id, title, content, file_type="text"):
         document = {
@@ -57,47 +47,63 @@ class SeekovaSearchEngine:
             "file_type": file_type
         }
         self.documents.append(document)
-        self._rebuild_index()
 
-    def _rebuild_index(self):
-        if not self.documents:
-            return
-        contents = [
-            document["content"]
-            for document in self.documents
-        ]
-        self.document_vectors = self.vectorizer.fit_transform(contents)
+    def tokenize(self, text):
+        return re.findall(r'\b[a-zA-Z0-9]{2,}\b', text.lower())
 
     def search(self, query, top_k=10):
         if not self.documents:
             return []
 
-        query_vector = self.vectorizer.transform([query])
+        query_terms = self.tokenize(query)
+        if not query_terms:
+            return []
 
-        similarities = cosine_similarity(
-            query_vector,
-            self.document_vectors
-        ).flatten()
+        N = len(self.documents)
+        doc_terms_list = [self.tokenize(d["title"] + " " + d["content"]) for d in self.documents]
 
-        ranked_indexes = similarities.argsort()[::-1]
+        df = {}
+        for terms in doc_terms_list:
+            for t in set(terms):
+                df[t] = df.get(t, 0) + 1
+
+        query_counts = Counter(query_terms)
+        query_tfidf = {}
+        for term, count in query_counts.items():
+            idf = math.log((N + 1) / (df.get(term, 0) + 1)) + 1.0
+            query_tfidf[term] = (count / len(query_terms)) * idf
+
+        query_norm = math.sqrt(sum(v ** 2 for v in query_tfidf.values())) or 1.0
+
+        scores = []
+        for idx, (doc, terms) in enumerate(zip(self.documents, doc_terms_list)):
+            if not terms:
+                continue
+            doc_counts = Counter(terms)
+            dot_product = 0.0
+
+            for term in query_tfidf:
+                if term in doc_counts:
+                    tf = doc_counts[term] / len(terms)
+                    idf = math.log((N + 1) / (df.get(term, 0) + 1)) + 1.0
+                    dot_product += query_tfidf[term] * (tf * idf)
+
+            doc_norm = math.sqrt(sum(((doc_counts[t]/len(terms)) * (math.log((N+1)/(df.get(t,0)+1))+1.0))**2 for t in set(terms))) or 1.0
+            similarity = dot_product / (query_norm * doc_norm)
+
+            if similarity == 0:
+                overlap = sum(1 for term in set(query_terms) if term in set(terms))
+                if overlap > 0:
+                    similarity = min(0.35, round(overlap * 0.12, 4))
+
+            if similarity > 0:
+                scores.append((idx, similarity))
+
+        scores.sort(key=lambda x: x[1], reverse=True)
 
         results = []
-
-        for index in ranked_indexes[:top_k]:
-            score = similarities[index]
-
-            if score <= 0:
-                # Check for direct word overlap fallback
-                query_words = set(query.lower().split())
-                doc_text = (self.documents[index]["title"] + " " + self.documents[index]["content"]).lower()
-                overlap = sum(1 for word in query_words if len(word) > 2 and word in doc_text)
-                if overlap > 0:
-                    score = min(0.35, round(overlap * 0.12, 4))
-                else:
-                    continue
-
-            document = self.documents[index]
-
+        for idx, score in scores[:top_k]:
+            document = self.documents[idx]
             results.append({
                 "id": document["id"],
                 "title": document["title"],
@@ -106,7 +112,6 @@ class SeekovaSearchEngine:
                 "score": round(float(score), 4)
             })
 
-        # Fallback to top document if query didn't match indexed vocabulary directly
         if not results and self.documents:
             doc = self.documents[0]
             results.append({
@@ -118,7 +123,6 @@ class SeekovaSearchEngine:
             })
 
         return results
-
 
 
 search_engine = SeekovaSearchEngine()
