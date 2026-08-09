@@ -14,11 +14,27 @@ import {
   Image as ImageIcon,
   Link2,
   Send,
-  CornerDownLeft
+  CornerDownLeft,
+  Globe,
+  Video,
+  Code2,
+  BookOpen,
+  Share2,
+  ExternalLink
 } from "lucide-react";
 import { SecondlyBrainOrb } from "./SecondlyBrainLogo";
 
 const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000" : "");
+
+const PLATFORMS = [
+  { id: "all", name: "All Platforms", icon: Globe, prefix: "" },
+  { id: "google", name: "Google", icon: Search, prefix: "g: " },
+  { id: "youtube", name: "YouTube", icon: Video, prefix: "yt: " },
+  { id: "github", name: "GitHub", icon: Code2, prefix: "gh: " },
+  { id: "reddit", name: "Reddit", icon: Share2, prefix: "r/ " },
+  { id: "wikipedia", name: "Wikipedia", icon: BookOpen, prefix: "wiki: " },
+  { id: "arxiv", name: "ArXiv", icon: FileText, prefix: "arxiv: " },
+];
 
 function SearchBar({
   query,
@@ -34,6 +50,7 @@ function SearchBar({
   const [listening, setListening] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState("all");
 
   const modes = [
     { id: "quick", label: "QUICK", icon: Zap },
@@ -131,6 +148,15 @@ function SearchBar({
     }
   }
 
+  function handlePlatformClick(plat) {
+    setSelectedPlatform(plat.id);
+    if (!plat.prefix) return;
+    // Check if query already has a prefix, replace or prepending
+    const cleanQuery = query.replace(/^(g:|yt:|gh:|r\/|wiki:|arxiv:)\s*/i, "");
+    setQuery(plat.prefix + cleanQuery);
+    if (textareaRef.current) textareaRef.current.focus();
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     onSearch(query);
@@ -156,6 +182,29 @@ function SearchBar({
             </button>
           );
         })}
+      </div>
+
+      {/* Multi-Platform Quick Target Bar (Mobile & Desktop Friendly) */}
+      <div className="platform-target-bar">
+        <span className="platform-target-label">Target Platform:</span>
+        <div className="platform-pills">
+          {PLATFORMS.map((plat) => {
+            const Icon = plat.icon;
+            const isSelected = selectedPlatform === plat.id;
+            return (
+              <button
+                key={plat.id}
+                type="button"
+                className={`platform-pill ${isSelected ? "active" : ""}`}
+                onClick={() => handlePlatformClick(plat)}
+                title={`Target ${plat.name}`}
+              >
+                <Icon size={12} />
+                <span>{plat.name}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Uploaded File Previews */}
