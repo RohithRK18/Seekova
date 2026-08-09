@@ -89,11 +89,56 @@ class SeekovaSearchEngine:
             return filtered if filtered else words
         return words
 
+    def _normalize_query(self, query):
+        q = query.lower().strip()
+        # Common typos & spelling rectification
+        typos = {
+            r"\brooadmap\b": "roadmap",
+            r"\broadmep\b": "roadmap",
+            r"\broadmp\b": "roadmap",
+            r"\bdat\b": "data",
+            r"\benginer\b": "engineer",
+            r"\benginering\b": "engineering",
+            r"\bsoftwar\b": "software",
+            r"\bdeveleper\b": "developer",
+            r"\bdevoloper\b": "developer",
+            r"\bpyton\b": "python",
+            r"\bjavscript\b": "javascript",
+            r"\breactjs\b": "react",
+            r"\bartifical\b": "artificial",
+            r"\bintellegence\b": "intelligence",
+            r"\bmachin\b": "machine",
+        }
+        for pattern, replacement in typos.items():
+            q = re.sub(pattern, replacement, q)
+        return q
+
     def _generate_general_knowledge_answer(self, query):
-        query_lower = query.lower()
+        query_lower = self._normalize_query(query)
+
+        # DATA ENGINEER & DATA SCIENCE ROADMAP
+        if any(k in query_lower for k in ["data engineer", "data engineering", "data science roadmap", "data roadmap"]):
+            return (
+                "The Comprehensive Data Engineer Roadmap outlines the foundational skills, core technologies, and architectural paradigms required to build scalable data pipelines, data warehouses, and analytics platforms. "
+                "Key learning stages include: "
+                "1. Programming & Fundamentals: Master Python, SQL (advanced joins, window functions, query optimization), and Scala/Java. "
+                "2. Data Modeling & Warehousing: Learn Relational DBs (PostgreSQL, MySQL), Data Warehouses (Snowflake, Google BigQuery, Amazon Redshift), and Data Lakehouses (Apache Iceberg, Delta Lake). "
+                "3. Distributed Data Processing: Gain expertise in batch and streaming processing using Apache Spark, PySpark, Apache Flink, and Kafka. "
+                "4. Workflow Orchestration & Pipelines: Design DAGs using Apache Airflow, Dagster, or Prefect, and transform data using dbt (data build tool). "
+                "5. Cloud Infrastructure & DevOps: Deploy pipelines using AWS/GCP/Azure, Docker containerization, Kubernetes, Terraform, and CI/CD pipelines."
+            )
+        elif "roadmap" in query_lower or "career path" in query_lower:
+            return (
+                f"Career & Technical Learning Roadmap for '{query.strip()}': "
+                "Mastering any modern engineering domain requires a structured, step-by-step progression: "
+                "1. Foundations: Learn core programming languages, data structures, algorithm efficiency (Big-O notation), and version control with Git. "
+                "2. Domain Architecture: Understand system design patterns, API protocols (REST, GraphQL, gRPC), and database management (SQL & NoSQL). "
+                "3. Hands-on Projects: Build production-grade end-to-end applications incorporating automated unit testing, logging, and error handling. "
+                "4. Cloud Deployment & CI/CD: Containerize apps with Docker, automate testing pipelines with GitHub Actions, and deploy to cloud environments (Vercel, AWS, GCP)."
+            )
 
         # AI & MACHINE LEARNING
-        if any(k in query_lower for k in ["ai", "artificial intelligence", "machine learning", "deep learning"]):
+        elif any(k in query_lower for k in ["ai", "artificial intelligence", "machine learning", "deep learning"]):
             return (
                 "Artificial Intelligence (AI) and Machine Learning (ML) represent advanced computational paradigms that enable software systems to analyze vast data, identify complex patterns, and execute autonomous decisions without explicit step-by-step programming. "
                 "Machine Learning algorithms are categorized into Supervised Learning (using labeled training data for classification and regression), Unsupervised Learning (discovering hidden patterns via clustering and dimensionality reduction), and Reinforcement Learning (training autonomous agents using trial-and-error reward mechanisms). "
@@ -316,10 +361,11 @@ class SeekovaSearchEngine:
                 "results": []
             }
 
-        query_terms = self.tokenize(query, filter_stopwords=True)
+        normalized_q = self._normalize_query(query)
+        query_terms = self.tokenize(normalized_q, filter_stopwords=True)
         if not query_terms:
             return {
-                "answer": self.synthesize_answer(query, [], mode),
+                "answer": self.synthesize_answer(normalized_q, [], mode),
                 "results": []
             }
 
