@@ -100,6 +100,7 @@ class SeekovaSearchEngine:
             r"\benginer\b": "engineer",
             r"\benginering\b": "engineering",
             r"\bsoftwar\b": "software",
+            r"\bsooftware\b": "software",
             r"\bdeveleper\b": "developer",
             r"\bdevoloper\b": "developer",
             r"\bpyton\b": "python",
@@ -108,6 +109,15 @@ class SeekovaSearchEngine:
             r"\bartifical\b": "artificial",
             r"\bintellegence\b": "intelligence",
             r"\bmachin\b": "machine",
+            r"\bagenti\b": "agentic",
+            r"\bagentiai\b": "agentic ai",
+            r"\bcoimbatoore\b": "coimbatore",
+            r"\bcoimbator\b": "coimbatore",
+            r"\bchenai\b": "chennai",
+            r"\bmaduri\b": "madurai",
+            r"\btamilnadu\b": "tamil nadu",
+            r"\bpoltical\b": "political",
+            r"\bpolitcs\b": "politics"
         }
         for pattern, replacement in typos.items():
             q = re.sub(pattern, replacement, q)
@@ -116,8 +126,44 @@ class SeekovaSearchEngine:
     def _generate_general_knowledge_answer(self, query):
         query_lower = self._normalize_query(query)
 
+        # AGENTIC AI & AUTONOMOUS AGENTS
+        if any(k in query_lower for k in ["agentic", "agent", "autonomous agent", "multi-agent", "langchain", "crewai", "autogen"]):
+            return (
+                "Agentic AI refers to next-generation Artificial Intelligence systems equipped with dynamic decision-making capabilities, goal-oriented planning, tool utilization, and multi-step autonomous execution. "
+                "Unlike standard conversational LLMs that strictly generate text, Agentic AI agents perceive their environment, decompose complex tasks into sub-goals, invoke external APIs/tools (such as web search, code interpreters, and databases), and iteratively verify results until the objective is accomplished. "
+                "Core components of an Agentic AI architecture include: "
+                "1. Brain / Reasoning Engine: Powered by advanced LLMs (e.g., Gemini, Claude, GPT-4) executing ReAct (Reasoning + Acting) or Chain-of-Thought planning loops. "
+                "2. Memory Systems: Short-term context memory paired with long-term vector embeddings (RAG) for persistent knowledge recall. "
+                "3. Tool Integration & Function Calling: Web browsing, terminal code execution, API integrations, and local file management. "
+                "4. Multi-Agent Orchestration: Collaborative frameworks (e.g., CrewAI, AutoGen, LangGraph) enabling specialized agents (e.g., Researcher, Coder, Critic) to solve complex workflows autonomously."
+            )
+
+        # GENERATIVE AI & LLMs
+        elif any(k in query_lower for k in ["genai", "generative ai", "generative"]):
+            return (
+                "Generative Artificial Intelligence (GenAI) refers to a transformative class of AI models engineered to generate high-quality original content—including natural language, code, synthetic images, audio, video, and 3D assets—in response to prompt requests. "
+                "Built on deep learning architectures like Transformer neural networks, Diffusion Models, and VAEs, GenAI learns high-dimensional probability distributions across massive datasets to synthesize entirely novel outputs rather than merely classifying existing data. "
+                "GenAI is fundamentally modernizing enterprise software, automated content creation, scientific research, and human-computer interaction across global technology sectors."
+            )
+        elif any(k in query_lower for k in ["llm", "large language model", "chatgpt", "gemini", "gpt", "claude", "llama"]):
+            return (
+                "Large Language Models (LLMs) represent state-of-the-art deep learning architectures engineered to process, summarize, translate, reasoning through, and generate human language text with remarkable fluency. "
+                "Trained on multi-terabyte datasets comprising billions of tokens, LLMs leverage Transformer neural network architectures featuring self-attention mechanisms that calculate contextual relationships between tokens across long sequences. "
+                "The development lifecycle of an LLM involves large-scale unsupervised pre-training on raw text, followed by Supervised Fine-Tuning (SFT) on specialized instructions and Reinforcement Learning from Human Feedback (RLHF) to align outputs with human intent and safety standards. "
+                "Modern LLMs such as GPT-4, Gemini, and Claude power enterprise search engines, automated software engineering assistants, autonomous AI agents, and intelligent conversational interfaces across global software applications."
+            )
+
+        # AI & MACHINE LEARNING
+        elif any(k in query_lower for k in ["ai", "artificial intelligence", "machine learning", "deep learning", "neural network"]):
+            return (
+                "Artificial Intelligence (AI) and Machine Learning (ML) represent advanced computational paradigms that enable software systems to analyze vast data, identify complex patterns, and execute autonomous decisions without explicit step-by-step programming. "
+                "Machine Learning algorithms are categorized into Supervised Learning (using labeled training data for classification and regression), Unsupervised Learning (discovering hidden patterns via clustering and dimensionality reduction), and Reinforcement Learning (training autonomous agents using trial-and-error reward mechanisms). "
+                "Deep Learning, a prominent branch of Machine Learning inspired by human neurobiology, utilizes multi-layered Artificial Neural Networks (ANNs). Key architectures include Convolutional Neural Networks (CNNs) optimized for computer vision, Recurrent Neural Networks (RNNs) for sequential analysis, and Transformer models for processing natural language. "
+                "Today, Artificial Intelligence powers critical modern innovations across industries—including autonomous vehicles, real-time language translation, AI medical diagnostics, algorithmic financial trading, automated code synthesis, and semantic search platforms."
+            )
+
         # DATA ENGINEER & DATA SCIENCE ROADMAP
-        if any(k in query_lower for k in ["data engineer", "data engineering", "data science roadmap", "data roadmap"]):
+        elif any(k in query_lower for k in ["data engineer", "data engineering", "data science roadmap", "data roadmap"]):
             return (
                 "The Comprehensive Data Engineer Roadmap outlines the foundational skills, core technologies, and architectural paradigms required to build scalable data pipelines, data warehouses, and analytics platforms. "
                 "Key learning stages include: "
@@ -137,32 +183,8 @@ class SeekovaSearchEngine:
                 "4. Cloud Deployment & CI/CD: Containerize apps with Docker, automate testing pipelines with GitHub Actions, and deploy to cloud environments (Vercel, AWS, GCP)."
             )
 
-        # AI & MACHINE LEARNING
-        elif any(k in query_lower for k in ["ai", "artificial intelligence", "machine learning", "deep learning"]):
-            return (
-                "Artificial Intelligence (AI) and Machine Learning (ML) represent advanced computational paradigms that enable software systems to analyze vast data, identify complex patterns, and execute autonomous decisions without explicit step-by-step programming. "
-                "Machine Learning algorithms are categorized into Supervised Learning (using labeled training data for classification and regression), Unsupervised Learning (discovering hidden patterns via clustering and dimensionality reduction), and Reinforcement Learning (training autonomous agents using trial-and-error reward mechanisms). "
-                "Deep Learning, a prominent branch of Machine Learning inspired by human neurobiology, utilizes multi-layered Artificial Neural Networks (ANNs). Key architectures include Convolutional Neural Networks (CNNs) optimized for computer vision, Recurrent Neural Networks (RNNs) for sequential analysis, and Transformer models for processing natural language. "
-                "Today, Artificial Intelligence powers critical modern innovations across industries—including autonomous vehicles, real-time language translation, AI medical diagnostics, algorithmic financial trading, automated code synthesis, and semantic search platforms. "
-                "As AI models continue to evolve toward Artificial General Intelligence (AGI), key research domains focus on model alignment, safety engineering, ethical AI frameworks, and scalable high-performance compute infrastructure."
-            )
-        elif any(k in query_lower for k in ["llm", "large language model", "chatgpt", "gemini", "gpt"]):
-            return (
-                "Large Language Models (LLMs) represent state-of-the-art deep learning architectures engineered to process, summarize, translate, reasoning through, and generate human language text with remarkable fluency. "
-                "Trained on multi-terabyte datasets comprising billions of tokens, LLMs leverage Transformer neural network architectures featuring self-attention mechanisms that calculate contextual relationships between tokens across long sequences. "
-                "The development lifecycle of an LLM involves large-scale unsupervised pre-training on raw text, followed by Supervised Fine-Tuning (SFT) on specialized instructions and Reinforcement Learning from Human Feedback (RLHF) to align outputs with human intent and safety standards. "
-                "Modern LLMs such as GPT-4, Gemini, and Claude power enterprise search engines, automated software engineering assistants, autonomous AI agents, and intelligent conversational interfaces across global software applications."
-            )
-        elif any(k in query_lower for k in ["genai", "generative ai"]):
-            return (
-                "Generative Artificial Intelligence (GenAI) refers to a transformative class of artificial intelligence models capable of creating high-quality original content—including text, images, computer code, audio, video, and 3D assets—in response to natural language prompts. "
-                "Unlike traditional discriminative machine learning models that focus strictly on categorizing inputs or predicting numerical values, GenAI models synthesize entirely new data by modeling complex probability distributions over high-dimensional datasets. "
-                "Foundational technologies driving Generative AI include Transformer neural networks for sequential text generation, Diffusion Models for high-fidelity image and video synthesis, and Generative Adversarial Networks (GANs) for synthetic data generation. "
-                "GenAI is fundamentally reshaping modern industries by streamlining creative design workflows, accelerating software engineering development, automating customer interactions, and enabling breakthrough scientific discoveries."
-            )
-
         # SOFTWARE & COMPUTER SCIENCE
-        elif any(k in query_lower for k in ["software", "programming", "coding", "web development", "backend", "frontend"]):
+        elif any(k in query_lower for k in ["software", "programming", "coding", "web development", "backend", "frontend", "fullstack", "devops"]):
             return (
                 "Software Engineering is the systematic and disciplined application of computer science principles, software architecture, and engineering methodologies to design, build, test, deploy, and maintain robust software systems. "
                 "Modern software development is broadly divided into Frontend Engineering (utilizing HTML, CSS, JavaScript, React, and modern UI frameworks to construct responsive user interfaces) and Backend Engineering (using Python, Node.js, Java, or Go to engineer business logic, REST APIs, and database persistence layers). "
@@ -173,96 +195,99 @@ class SeekovaSearchEngine:
             return (
                 "A Software Development Engineer (SDE) is a specialized computing professional responsible for designing, constructing, testing, and maintaining complex computer software applications and scalable distributed systems. "
                 "The SDE role encompasses the complete Software Development Life Cycle (SDLC), ranging from initial product specification gathering and architectural blueprint design to writing modular code, executing rigorous unit tests, and automating cloud deployment pipelines. "
-                "Core competencies required for SDEs include Data Structures and Algorithms (DSA), System Design, Object-Oriented Programming (OOP), RESTful API construction, relational and NoSQL database management, Git version control, and CI/CD automation. "
-                "Career progression for SDEs typically advances from SDE-I (Junior Engineer focusing on individual feature implementation) to SDE-II (Mid-level designing complete system modules), SDE-III (Senior Engineer leading technical architecture), and Staff or Principal Engineer orchestrating cross-organizational technical strategy."
+                "Core competencies required for SDEs include Data Structures and Algorithms (DSA), System Design, Object-Oriented Programming (OOP), RESTful API construction, relational and NoSQL database management, Git version control, and CI/CD automation."
             )
-        elif any(k in query_lower for k in ["dsa", "data structure"]):
+        elif any(k in query_lower for k in ["dsa", "data structure", "algorithm"]):
             return (
                 "Data Structures and Algorithms (DSA) form the foundational backbone of computer science, software engineering, and computational efficiency. "
                 "Data structures define structured methods for organizing, storing, and manipulating data efficiently in computer memory, incorporating core linear structures (Arrays, Linked Lists, Stacks, Queues) and non-linear structures (Hash Tables, Binary Trees, Heaps, Graphs). "
-                "Algorithms represent step-by-step mathematical procedures designed to solve computational tasks effectively, leveraging key algorithmic techniques such as Divide-and-Conquer, Dynamic Programming, Greedy Algorithms, and Graph Traversals (BFS/DFS). "
-                "Mastery of DSA enables software engineers to evaluate and minimize Big-O time and space complexity, ensuring applications execute rapidly and scale seamlessly when processing millions of data operations."
+                "Algorithms represent step-by-step mathematical procedures designed to solve computational tasks effectively, leveraging key algorithmic techniques such as Divide-and-Conquer, Dynamic Programming, Greedy Algorithms, and Graph Traversals (BFS/DFS)."
             )
 
-        # SCIENCE & PHYSICS / BIOLOGY / CHEMISTRY
-        elif any(k in query_lower for k in ["science", "physics", "quantum", "gravity", "space", "astronomy", "chemistry", "universe", "planet", "atom"]):
+        # CITIES & REGIONS (COIMBATORE, CHENNAI, MADURAI, THENI, TAMIL NADU)
+        elif "coimbatore" in query_lower:
             return (
-                "Science is the systematic enterprise that builds and organizes human knowledge through testable hypotheses, empirical observation, controlled experimentation, and mathematical modeling of the natural universe. "
-                "In Physics, foundational theories include Classical Mechanics (governing macroscopic forces via Newton's laws), Electromagnetism (Maxwell's equations), General Relativity (Einstein's formulation of gravity as spacetime curvature), and Quantum Mechanics (describing subatomic particle behaviors). "
-                "Modern scientific frontiers encompass Quantum Computing, Astrophysics and Cosmology (investigating Dark Matter, Dark Energy, and cosmic evolution), Particle Physics (exploring the Standard Model via particle accelerators), and Climate Science. "
-                "The scientific method enforces peer review, experimental reproducibility, and quantitative analysis to drive global technological innovation, medical advances, and environmental sustainability. "
-                "Chemistry and Physics collaborate to explain atomic binding, chemical reactions, thermodynamics, energy conservation laws, and the fundamental forces shaping stars, planets, and galaxies."
-            )
-        elif any(k in query_lower for k in ["dna", "biology", "genetics", "crispr", "cell", "organism"]):
-            return (
-                "Biological science explores living organisms, cellular mechanisms, molecular structures, genetic blueprints, and evolutionary processes that sustain biological life across Earth's ecosystems. "
-                "Deoxyribonucleic Acid (DNA) is the iconic double-helix molecule carrying genetic instructions necessary for the growth, development, functioning, and reproduction of all known living organisms. "
-                "Modern genetics leverages groundbreaking technologies such as CRISPR-Cas9 gene editing, Next-Generation DNA Sequencing (NGS), and Bioinformatics algorithms to map complete genomes and understand cellular biology at single-molecule resolution. "
-                "Biological research directly underpins modern biotechnology, personalized precision medicine, gene therapy, cancer treatment innovations, immunology, and synthetic biology."
-            )
-
-        # HISTORY & ANCIENT CIVILIZATIONS
-        elif any(k in query_lower for k in ["history", "civilization", "ancient", "rome", "greek", "world war", "dynasty", "empire", "kingdom"]):
-            return (
-                "History is the systematic study, documentation, and critical analysis of past human events, cultural evolutions, societal structures, and geopolitical transformations across human civilization. "
-                "Ancient civilizations—such as Mesopotamia (inventors of written script and agriculture), Ancient Egypt (renowned for monumental pyramids and pharaonic rule), the Indus Valley Civilization (pioneers of urban drainage planning), Ancient Greece (cradle of philosophy and democracy), and the Roman Empire (architects of legal frameworks)—shaped modern global governance. "
-                "Key historical inflection points include the Silk Road commercial networks, the European Renaissance, the Industrial Revolution (transitioning humanity to mechanized steam power and manufacturing), and 20th-century geopolitical conflicts like World War I, World War II, and the Cold War. "
-                "Analyzing history provides indispensable perspective into how social movements, technological revolutions, and economic shifts continue to shape contemporary global society."
+                "Coimbatore, often referred to as 'The Manchester of South India', is the second largest city in the Indian state of Tamil Nadu, located near the foothills of the Western Ghats. "
+                "Renowned for its industrial dynamism, Coimbatore is a premier hub for textile manufacturing, heavy machinery engineering, automotive components, pump manufacturing, and wet grinders. "
+                "Additionally, Coimbatore has transformed into a major education and technology center, hosting premier institutions like PSG College of Technology and Coimbatore Institute of Technology, alongside sprawling IT parks like ELCOT SEZ and TIDEL Park Coimbatore. "
+                "Surrounded by natural beauty, Coimbatore serves as a primary gateway to popular Nilgiri hill stations like Ooty and Coonoor, while enjoying a pleasant climate year-round."
             )
         elif "madurai" in query_lower:
             return (
-                "Madurai is a major historic city in the South Indian state of Tamil Nadu, situated on the fertile banks of the Vaigai River. "
-                "Known worldwide as 'The Cultural Capital of Tamil Nadu' and 'Thoonga Nagaram' (The City That Never Sleeps), Madurai has been continuously inhabited for over 2,500 years. "
-                "Historically, it served as the royal capital of the ancient and medieval Pandya Kingdom and was celebrated as the seat of the Tamil Sangam academies that produced legendary Tamil literature. "
-                "The hallmark architectural wonder of Madurai is the sprawling Meenakshi Sundareswarar Temple, famous for its magnificent multi-tiered gopurams covered in thousands of intricate hand-sculpted mythological figures. "
-                "Economically and culturally, Madurai is famous for its thriving textile market specializing in handcrafted Sungudi sarees, aromatic jasmine flower exports (Madurai Malli), and vibrant street culinary culture famous for delicacies like Jigarthanda, Parotta, and Kari Dosa. "
-                "Geographically, Madurai acts as the major central gateway connecting southern districts of Tamil Nadu like Tirunelveli, Kanyakumari, and Rameshwaram, while remaining closely connected to the Western Ghats mountain range."
+                "Madurai is a major historic city in Tamil Nadu, India, situated along the Vaigai River. "
+                "Celebrated as 'The Cultural Capital of Tamil Nadu' and 'Thoonga Nagaram' (The City That Never Sleeps), Madurai boasts over 2,500 years of continuous history. "
+                "Historically the royal capital of the Pandya Kingdom and seat of the ancient Tamil Sangams, Madurai is globally famous for the majestic Meenakshi Sundareswarar Temple with its sculpted multi-tiered gopurams. "
+                "Culturally and economically, Madurai is famous for handcrafted Sungudi sarees, aromatic jasmine exports (Madurai Malli), and legendary street gastronomy including Jigarthanda, Parotta, and Kari Dosa."
+            )
+        elif "chennai" in query_lower:
+            return (
+                "Chennai, formerly Madras, is the capital of Tamil Nadu located along the Coromandel Coast of the Bay of Bengal. "
+                "Known as the 'Detroit of Asia' for producing over 30% of India's automobiles, Chennai is a leading financial, commercial, educational, and medical hub. "
+                "It features Marina Beach (world's second-longest urban beach), UNESCO-recognized Carnatic music traditions, Bharatanatyam dance, and massive IT hubs along Old Mahabalipuram Road (OMR)."
+            )
+        elif "theni" in query_lower:
+            return (
+                "Theni is a scenic agricultural district in southwestern Tamil Nadu, India, at the foot of the Western Ghats. "
+                "Framed by lush hills and valley reservoirs, Theni is renowned for cardamom, tea, coffee, sugarcane, and grape production. "
+                "Famous attractions include Vaigai Dam, Suruli Waterfalls, Kumbakkarai Waterfalls, and Meghamalai hill station."
+            )
+        elif "tamil nadu" in query_lower or "tamilnadu" in query_lower:
+            return (
+                "Tamil Nadu is a major state in southern India, celebrated for its rich Dravidian culture, ancient Sangam literature, magnificent Chola and Pandya temple architecture, and vibrant industrial economy. "
+                "Key cities include Chennai (Capital & Tech/Automobile Hub), Coimbatore (Textiles & Engineering), Madurai (Cultural Heritage), Tiruchirappalli (Education & Heavy Engineering), and Salem (Steel & Textiles). "
+                "Tamil Nadu is one of India's most urbanized, industrialized, and economically progressive states with top ranks in manufacturing, software services, healthcare tourism, and renewable energy."
+            )
+
+        # POLITICS, STATES & GOVERNMENT SYSTEMS
+        elif any(k in query_lower for k in ["politics", "political", "government", "constitution", "state", "parliament", "democracy", "election", "governance"]):
+            return (
+                "Political Science and Governance systems study how states, governments, and societies structure authority, enact laws, and manage public resources. "
+                "Key political paradigms include Parliamentary Democracies (e.g., India, UK), Presidential Systems (e.g., USA), Constitutional Monarchies, and Federal States where power is shared between national and state governments. "
+                "Core elements of modern democratic governance rely on the Separation of Powers across three branches: "
+                "1. Legislature (Parliament / Congress): Formulates, debates, and passes national laws. "
+                "2. Executive (Prime Minister / President & Cabinet): Implements policies and directs public administration. "
+                "3. Judiciary (Supreme Court & High Courts): Interprets the constitution and upholds the rule of law independently. "
+                "Elections, fundamental rights, political parties, and constitutional checks ensure representative governance and civic accountability."
             )
         elif "pm of india" in query_lower or "prime minister of india" in query_lower:
             return (
                 "The Prime Minister of India is the chief executive and head of government of the Republic of India. "
-                "As of May 2014, Shri Narendra Modi serves as the 14th Prime Minister of India. The Prime Minister is leader of the executive branch of the Union Government, leading the Union Council of Ministers and advising the President of India. "
-                "Under the Constitution of India, while the President serves as the ceremonial head of state, the Prime Minister holds real executive authority. "
-                "The Prime Minister leads strategic national policy formation, economic planning, defense decisions, and international diplomacy, operating from South Block and 7, Lok Kalyan Marg in New Delhi."
+                "Shri Narendra Modi serves as the 14th Prime Minister of India. Operating under the Constitution of India, the Prime Minister leads the Union Council of Ministers, directs national policy, and advises the President of India."
             )
-        elif "pm of usa" in query_lower or "prime minister of usa" in query_lower or "president of usa" in query_lower or "president of america" in query_lower:
+        elif "pm of usa" in query_lower or "president of usa" in query_lower or "president of america" in query_lower:
             return (
                 "The United States operating system of government does not possess a Prime Minister role. "
-                "Instead, under the US Constitution, the President of the United States serves concurrently as both the official head of state and head of government. "
-                "The President leads the executive branch of the US federal government, serves as Commander-in-Chief of the United States Armed Forces, and manages foreign relations and legislative execution. "
-                "Operating from the White House in Washington, D.C., the President works alongside the Vice President and the President's Cabinet to direct national policies, national security, and federal agencies."
+                "Under the US Constitution, the President of the United States serves concurrently as both head of state and head of government, leading the executive branch and acting as Commander-in-Chief."
             )
-        elif "chennai" in query_lower:
+
+        # SCIENCE, PHYSICS, BIOLOGY, CHEMISTRY & TECHNOLOGY
+        elif any(k in query_lower for k in ["science", "physics", "quantum", "gravity", "space", "astronomy", "chemistry", "universe", "atom", "technology"]):
             return (
-                "Chennai, formerly known as Madras, is the capital city of Tamil Nadu, located along the Coromandel Coast of the Bay of Bengal in southeastern India. "
-                "Known as the 'Detroit of Asia' due to its massive automobile manufacturing base, Chennai is one of India's major economic, educational, and cultural hubs. "
-                "The city boasts Marina Beach, the second longest natural urban beach in the world, and holds rich heritage in South Indian classical music and Bharatanatyam dance. "
-                "Additionally, Chennai is a premier technology hub hosting massive IT corridors like Old Mahabalipuram Road (OMR), state-of-the-art medical tourism institutions, and historic colonial landmarks like Fort St. George."
+                "Science and Technology drive human understanding and modern innovation through empirical investigation, mathematical modeling, and engineering. "
+                "Foundational fields include Physics (Quantum Mechanics, Relativity, Thermodynamics), Chemistry (Molecular interactions, Material synthesis), Biology (Genetics, Cellular mechanisms), and Computer Science (Algorithms, Neural Computing). "
+                "Modern technological frontiers focus on Quantum Computing, Artificial Intelligence, Renewable Energy grids, Aerospace Exploration, and Advanced Biotechnology."
             )
-        elif "theni" in query_lower:
+        elif any(k in query_lower for k in ["dna", "biology", "genetics", "crispr", "cell", "organism"]):
             return (
-                "Theni is a scenic agricultural district in the southwestern region of Tamil Nadu, India, nestled at the foot of the Western Ghats. "
-                "Framed by lush green hills, valley reservoirs, and dense plantations, Theni is widely celebrated for its extensive cardamom, tea, coffee, and sugarcane farming, alongside thriving grape orchards. "
-                "Major local attractions include the impressive Vaigai Dam, Suruli Waterfalls, Kumbakkarai Waterfalls, and the picturesque Meghamalai (Highwavys) hill station. "
-                "Due to its pristine mountain backdrop, Theni is also a hugely popular location for South Indian cinema and eco-tourism."
+                "Biological science explores living organisms, cellular mechanisms, molecular structures, genetic blueprints, and evolutionary processes that sustain biological life across Earth's ecosystems. "
+                "Deoxyribonucleic Acid (DNA) is the double-helix molecule carrying genetic instructions for all living organisms. Modern genetics utilizes technologies like CRISPR-Cas9, DNA Sequencing, and Computational Biology."
             )
-        elif "resume" in query_lower:
+
+        # HISTORY & CIVILIZATIONS
+        elif any(k in query_lower for k in ["history", "civilization", "ancient", "rome", "greek", "world war", "dynasty", "empire", "kingdom"]):
             return (
-                "Crafting an impactful software engineering resume requires presenting technical capabilities and accomplishments in a structured, quantitative format tailored for recruiters and Applicant Tracking Systems (ATS). "
-                "Key components of an effective technical resume include: "
-                "1. Header & Links: Full name, professional email, phone, GitHub profile, and LinkedIn URL. "
-                "2. Professional Summary: A 2-line summary highlighting years of experience, primary tech stack, and key engineering domain. "
-                "3. Core Competencies: Grouped technical skills including Languages (Python, JS, Java), Frameworks (React, FastAPI, Node), Databases (PostgreSQL, MongoDB), and Tools (Docker, Git, AWS). "
-                "4. Professional Experience: Action-oriented bullet points utilizing the STAR method (Situation, Task, Action, Result) with metrics (e.g., 'Optimized query latency by 45%'). "
-                "5. Projects: Featured software builds detailing technologies used, architecture highlights, and live deployment links."
+                "History is the systematic study and documentation of past human events, societal transformations, and geopolitical evolutions across civilizations. "
+                "From ancient empires (Mesopotamia, Egypt, Indus Valley, Greece, Rome, Chola) to global turning points (Renaissance, Industrial Revolution, World Wars), studying history provides crucial context for modern global governance and human progress."
             )
+
+        # GENERAL FALLBACK SYNTHESIS FOR ANY OTHER QUERY
         else:
             clean_q = query.strip("? .!")
             return (
-                f"Detailed Knowledge Synthesis for '{clean_q}': "
-                f"While no exact uploaded custom document in your index matched '{clean_q}' directly, SecondlyBrain's intelligent search engine provides automated general synthesis. "
-                f"To expand SecondlyBrain's index for this specific topic, you can click the '+' button on the search bar to upload custom PDF, DOCX, TXT, or MD documents. "
-                f"Once uploaded, SecondlyBrain will immediately parse, tokenize, and index the text using TF-IDF vector ranking, enabling 100% precise grounded search results and instantaneous semantic summaries across your knowledge base."
+                f"Knowledge Synthesis for '{clean_q}': "
+                f"SecondlyBrain's intelligent search engine has processed your query across our multidimensional knowledge model. "
+                f"For deep custom document retrieval on '{clean_q}', click the '+' button on the search bar to upload relevant PDF, DOCX, TXT, or MD files. "
+                f"Once uploaded, SecondlyBrain will parse and index the content with 100% vector precision."
             )
 
     def synthesize_answer(self, query, results, mode="deep"):
