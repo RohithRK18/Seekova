@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Command, Sliders, User, Sparkles, LogOut, Bookmark, Layers, Settings, LogIn } from "lucide-react";
+import { Command, Sliders, User, Sparkles, LogOut, Bookmark, Layers, Settings, LogIn, Menu } from "lucide-react";
 import SecondlyBrainLogo from "./SecondlyBrainLogo";
 
 function TopNavigation({
@@ -16,11 +16,19 @@ function TopNavigation({
   return (
     <header className="secondlybrain-topbar">
       <div className="topbar-left">
+        <button
+          className="mobile-menu-toggle-btn"
+          onClick={onToggleSidebar}
+          title="Toggle Navigation Menu"
+        >
+          <Menu size={20} />
+        </button>
+
         <div className="mobile-brand" onClick={onNewSearch}>
           <SecondlyBrainLogo variant="full" size="small" />
         </div>
 
-        <div className="workspace-badge">
+        <div className="workspace-badge desktop-only-badge">
           <Sparkles size={13} className="sparkle-icon" />
           <span className="badge-mode-label">Mode: {activeMode.toUpperCase()}</span>
         </div>
@@ -28,7 +36,7 @@ function TopNavigation({
 
       <div className="topbar-right">
         <button
-          className="keyboard-shortcut-btn"
+          className="keyboard-shortcut-btn desktop-only-btn"
           onClick={onOpenCommandPalette}
           title="Open Command Palette (Ctrl+K)"
         >
@@ -36,7 +44,7 @@ function TopNavigation({
           <span>Ctrl K</span>
         </button>
 
-        <button className="topbar-action-btn" title="System Settings">
+        <button className="topbar-action-btn desktop-only-btn" title="System Settings">
           <Sliders size={16} />
         </button>
 
