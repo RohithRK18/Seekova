@@ -1,5 +1,5 @@
-import React from "react";
-import { Command, Sliders, Moon, User, Sparkles } from "lucide-react";
+import React, { useState } from "react";
+import { Command, Sliders, User, Sparkles, LogOut, Bookmark, Layers, Settings, LogIn } from "lucide-react";
 import SecondlyBrainLogo from "./SecondlyBrainLogo";
 
 function TopNavigation({
@@ -7,8 +7,12 @@ function TopNavigation({
   onNewSearch,
   onOpenCommandPalette,
   onToggleSidebar,
-  mobileSidebarOpen
+  currentUser,
+  onOpenAuth,
+  onLogout
 }) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <header className="secondlybrain-topbar">
       <div className="topbar-left">
@@ -36,8 +40,53 @@ function TopNavigation({
           <Sliders size={16} />
         </button>
 
-        <div className="user-profile-avatar" title="Seekova User">
-          <User size={15} />
+        {/* User Account Avatar & Dropdown */}
+        <div className="user-profile-wrapper" style={{ position: "relative" }}>
+          {currentUser ? (
+            <div
+              className="user-profile-avatar"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              title={currentUser.name}
+              style={{ cursor: "pointer" }}
+            >
+              <span>{currentUser.name.charAt(0).toUpperCase()}</span>
+            </div>
+          ) : (
+            <button
+              className="topbar-action-btn"
+              onClick={() => onOpenAuth("login")}
+              title="Sign In / Register"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", background: "rgba(99, 102, 241, 0.15)", border: "1px solid rgba(99,102,241,0.3)", borderRadius: "20px", color: "#38bdf8", fontWeight: 600, fontSize: 12 }}
+            >
+              <LogIn size={14} />
+              <span>Sign In</span>
+            </button>
+          )}
+
+          {dropdownOpen && currentUser && (
+            <div className="user-menu-dropdown" onClick={() => setDropdownOpen(false)}>
+              <div className="menu-user-info">
+                <span className="menu-user-name">{currentUser.name}</span>
+                <span className="menu-user-email">{currentUser.email}</span>
+              </div>
+              <button className="user-menu-item">
+                <Bookmark size={14} />
+                <span>Saved Insights</span>
+              </button>
+              <button className="user-menu-item">
+                <Layers size={14} />
+                <span>Research Projects</span>
+              </button>
+              <button className="user-menu-item">
+                <Settings size={14} />
+                <span>Account Settings</span>
+              </button>
+              <button className="user-menu-item logout" onClick={onLogout}>
+                <LogOut size={14} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

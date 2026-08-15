@@ -7,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from app.routes.search import router as search_router
 from app.routes.upload import router as upload_router
 from app.routes.history import router as history_router
+from app.routes.projects import router as projects_router
+from app.routes.auth import router as auth_router
 
 
 app = FastAPI(
@@ -26,6 +28,8 @@ app.add_middleware(
 app.include_router(search_router)
 app.include_router(upload_router)
 app.include_router(history_router)
+app.include_router(projects_router)
+app.include_router(auth_router)
 
 
 @app.get("/api")
